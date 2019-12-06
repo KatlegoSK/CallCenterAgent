@@ -18,13 +18,8 @@ import javax.validation.Valid;
 public class AgentController {
 
 	@Autowired
-	private TeamRepository teamRepository;
-
-	@Autowired
 	private AgentRepository agentRepository;
 
-	@Autowired
-	private ManagerRepository managerRepository;
 
 	/* Retrieve all agents */
 	@GetMapping("/agents")
@@ -46,41 +41,6 @@ public class AgentController {
 		return agentRepository.save(agent);
 	}
 
-	/* Retrieve all teams */
-	@GetMapping("/teams")
-	public List<Team> getAllTeams() {
-		return teamRepository.findAll();
-	}
 
-	/* Get a team by ID */
-	@GetMapping("/team/{id}")
-	public ResponseEntity<Team> getTeamById(@PathVariable(value = "id") Long teamId) throws Exception {
-		Team team = teamRepository.findById(teamId)
-				.orElseThrow(() -> new Exception("Team not found for this id " + teamId));
-		return ResponseEntity.ok().body(team);
-	}
-
-	/* Create a team */
-	@PostMapping("/team")
-	public Team createTeam(@Valid @RequestBody Team team) {
-		return teamRepository.save(team);
-	}
-
-	/* Assigns an agent to the specified team */
-	@PutMapping("/team/{id}/agent")
-	public ResponseEntity<Agent> assignAgent(@PathVariable(value = "id") Long teamID,
-			@Valid @RequestBody Agent agentDetails) throws Exception {
-		Team team = teamRepository.findById(teamID).orElseThrow(() -> new Exception("ID not found :: " + teamID));
-
-		agentDetails.setTeam(team);
-		final Agent updatedAgent = agentRepository.save(agentDetails);
-		return ResponseEntity.ok(updatedAgent);
-	}
-
-	/* Create Manager */
-	@PostMapping("/manager")
-	public Manager addManager(@Valid @RequestBody Manager manager) {
-		return managerRepository.save(manager);
-	}
 
 }
