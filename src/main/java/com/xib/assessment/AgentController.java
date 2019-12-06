@@ -2,6 +2,7 @@ package com.xib.assessment;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,9 @@ public class AgentController {
 
 	@Autowired
 	private AgentRepository agentRepository;
+
+	@Autowired
+	private ManagerRepository managerRepository;
 
 	/* Retrieve all agents */
 	@GetMapping("/agents")
@@ -62,5 +66,21 @@ public class AgentController {
 		return teamRepository.save(team);
 	}
 
+	/* Assigns an agent to the specified team */
+	@PutMapping("/team/{id}/agent")
+	public ResponseEntity<Agent> assignAgent(@PathVariable(value = "id") Long teamID,
+			@Valid @RequestBody Agent agentDetails) throws Exception {
+		Team team = teamRepository.findById(teamID).orElseThrow(() -> new Exception("ID not found :: " + teamID));
+
+		agentDetails.setTeam(team);
+		final Agent updatedAgent = agentRepository.save(agentDetails);
+		return ResponseEntity.ok(updatedAgent);
+	}
+
+	/* Create Manager */
+	@PostMapping("/manager")
+	public Manager addManager(@Valid @RequestBody Manager manager) {
+		return managerRepository.save(manager);
+	}
 
 }
