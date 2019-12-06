@@ -21,13 +21,13 @@ public class AgentController {
 	private AgentRepository agentRepository;
 
 
-	/* Retrieve all agents */
+	/* Retrieve all agents / Returns a list of all agents in the database */
 	@GetMapping("/agents")
 	public List<Agent> getAllAgents() {
 		return agentRepository.findAll();
 	}
 
-	/* Get a Agent by ID */
+	/* Get a Agent by ID/ Returns a detail view of the specified agent */
 	@GetMapping("/agent/{id}")
 	public ResponseEntity<Agent> getAgentById(@PathVariable(value = "id") Long agentID) throws Exception {
 		Agent agent = agentRepository.findById(agentID)
@@ -35,7 +35,7 @@ public class AgentController {
 		return ResponseEntity.ok().body(agent);
 	}
 
-	/* Create an Agent */
+	/* Create an Agent/ Creates a new agent with the specified details */
 	@PostMapping("/agent")
 	public Agent createAgent(@Valid @RequestBody Agent agent) {
 		return agentRepository.save(agent);
